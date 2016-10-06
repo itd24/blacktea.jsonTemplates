@@ -1,0 +1,26 @@
+{
+  "name": "blacktea.jsonTemplates",
+  "version": "0.0.1",
+  "description": "A templating library for json files",
+  "main": "index.js",
+  "engines": {
+    "node": "4.1.2",
+    "npm": "3.3.9"
+  },
+  "author": {
+    "name": "itd24",
+    "email": "ziga.petek2@gmail.com"
+  },
+  "keywords": [
+    "blacktea",
+    "template",
+    "templating",
+    "json"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "glob": "^7.0.6",
+    "lodash": "^4.15.0",
+    "blacktea.exceptions":"~0.1.1"
+  }
+}

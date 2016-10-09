@@ -5,6 +5,10 @@ var path = require("path");
 
 var templateObject = {};
 
+/**
+ * Regex values for interpolation, escaping and evaluation
+ * @type {Object}
+ */
 var options = {
     interpolate: /\{\{([\s\S]+?)\}\}/g,
     escape:/\{\{-([\s\S]+?)\}\}/g,
@@ -12,9 +16,19 @@ var options = {
 }
 
 var privateFunctions = {
+    /**
+     * prepares the template string.
+     * @param  {string} template the raw, untrimmed template
+     * @return {string}          a template, that is ready for evaluation
+     */
     prepareTemplate:function(template){
       return _.trim(template);  
     },
+    /**
+     * checks, if the template is a replacement, or just a string, that needs to be run over the lodash template engine
+     * @param  {string}  template the template to check
+     * @return {Boolean}          true, if the template is a replacement, false otherwise
+     */
     isTemplateReplacement:function(template){
         var matches = this.prepareTemplate(template).match(options.interpolate);
         var rest = this.prepareTemplate(template).replace(options.interpolate,"");
@@ -22,6 +36,11 @@ var privateFunctions = {
             return true;
         return false;
     },
+    /**
+     * evaluates the template and returns a replacement
+     * @param  {string} template the template to evaluate
+     * @return {mixed}          the result of the evaluation
+     */
     evaluate:function(template){
         //gets the first interpolate match and evaluates it
         var matches = this.prepareTemplate(template).match(options.interpolate);
@@ -39,6 +58,11 @@ var privateFunctions = {
             throw e;
         }
     },
+    /**
+     * parses a template using the lodash templating engine
+     * @param  {string} template the template to parse
+     * @return {string}          the result of the compiled template function
+     */
     parse:function(template){
         try{
             var compiled = _.template(template,options);
@@ -48,6 +72,11 @@ var privateFunctions = {
             throw e;
         }
     },
+    /**
+     * adds a template object to the "templateObject" variable, so it can be used in templates
+     * @param {string} name the key under which the object will be available
+     * @param {mixed} obj  the value to store under that key
+     */
     addTemplateObject:function(name,obj){
         if(!templateObject[name])
             templateObject[name] = obj;
@@ -58,6 +87,10 @@ var privateFunctions = {
             throw new Exceptions.InvalidArgumentException("template object already exists, merge wasn't possible");
         }
     },
+    /**
+     * adds a template object from file rather than directly. It basically just requires a file and adds the result 
+     * @param {[type]} file [description]
+     */
     addTemplateObjectFromFile:function(file){
         try{
                 var name = path.basename(file,".js");
@@ -67,6 +100,9 @@ var privateFunctions = {
                console.log("error: "+e.message)
            }
     },
+    /**
+     * adds core template object. That is, objects/helpers stored in the Helpers directory
+     */
     addCoreTemplateObjects:function(){
         var self = this;
         var files = glob.sync(path.resolve(__dirname,"Helpers","*.js"));
@@ -74,6 +110,10 @@ var privateFunctions = {
            self.addTemplateObjectFromFile(file);
        });
     },
+    /**
+     * requires all files from a path and adds them as template objects
+     * @param {[type]} dir [description]
+     */
     addTemplateObjectsFromPath:function(dir){
         var self = this;
         var dirPath = "";
@@ -99,6 +139,11 @@ var privateFunctions = {
 privateFunctions.addCoreTemplateObjects();
 
 module.exports = {
+    /**
+     * evaluates a template. Based on if it is a replacement, it either evaluates or parses the string
+     * @param  {string} template the template to evaluate
+     * @return {mixed}          the result of the evaluation
+     */
     evaluate:function(template){
         if(privateFunctions.isTemplateReplacement(template)){
            return privateFunctions.evaluate(template); 
@@ -107,6 +152,11 @@ module.exports = {
             return privateFunctions.parse(template);
         }
     },
+    /**
+     * It recursively goes through all object members and evaluates them if needed
+     * @param  {object} obj the object to evaluate
+     * @return {object}     the evaluated object
+     */
     evaluateObject:function(obj){
         var self = this;
         if(_.isArray(obj) || _.isPlainObject(obj)){
@@ -121,10 +171,19 @@ module.exports = {
             return obj;
         }
     },
+    /**
+     * adds a variable to the template objects
+     * @param {string} name the key under which the value will be accessible
+     * @param {mixed} obj  the value to add
+     */
     add:function(name,obj){
         if(!_.isEmpty(name))
             privateFunctions.addTemplateObject(name,obj);
     },
+    /**
+     * adds all files in a directory as template objects
+     * @param {string} dir the directory to add
+     */
     addPath:function(dir){
         privateFunctions.addTemplateObjectFromPath(dir);
     }

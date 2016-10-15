@@ -98,18 +98,18 @@ Will, after it is compiled, contain these values:<br/>
 This way it is possible to inject entire objects or functions into the end result.
 <br/>
 ##Documentation
-***add(name, object)***<br/>
+-***add(name, object)***<br/>
     adds a variable / object / function to the template variables.<br/>After adding, an object is available in a template via its key.<br/>
-    - ___name___   - the key of the object. Type of string<br/>
-    - ___object___ - the object to add. It can be any type<br/>
-***addPath(path)***<br/>
+        ___name___   - the key of the object. Type of string<br/>
+        ___object___ - the object to add. It can be any type<br/>
+-***addPath(path)***<br/>
     requires and adds all .js files inside a specified path as template objects.<br/>The file name becomes the object key.<br/>
-    - ___path___   - either a string containing a path or an array of strings which can be used with the "path.resolve" function<br/>
-***evaluateObject(object)***<br/>
+        ___path___   - either a string containing a path or an array of strings which can be used with the "path.resolve" function<br/><br/>
+-***evaluateObject(object)***<br/>
     recursively goes through all object members and evaluates them if needed.<br/>
-    - ___object___   - a plain object, containing template strings<br/>
-***evaluate(template)***<br/>
+        ___object___   - a plain object, containing template strings<br/><br/>
+-***evaluate(template)***<br/>
     evaluates a template. Based on if it is a replacement, it either evaluates or parses the string.<br/>
-    - ___template___   - the template string to evaluate<br/>
+        ___template___   - the template string to evaluate<br/><br/>
 ## Licence
 blacktea.jsonTemplates is released under the [MIT License](http://www.opensource.org/licenses/MIT).

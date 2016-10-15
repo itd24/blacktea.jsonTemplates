@@ -101,7 +101,7 @@ This way it is possible to inject entire objects or functions into the end resul
 -***add(name, object)***<br/>
     adds a variable / object / function to the template variables.<br/>After adding, an object is available in a template via its key.<br/>
         ___name___   - the key of the object. Type of string<br/>
-        ___object___ - the object to add. It can be any type<br/>
+        ___object___ - the object to add. It can be any type<br/><br/>
 -***addPath(path)***<br/>
     requires and adds all .js files inside a specified path as template objects.<br/>The file name becomes the object key.<br/>
         ___path___   - either a string containing a path or an array of strings which can be used with the "path.resolve" function<br/><br/>

@@ -17,6 +17,9 @@
   "dependencies": {
     "glob": "^7.0.6",
     "lodash": "^4.15.0",
-    "blacktea.exceptions":"~0.1.1"
+    "blacktea.exceptions": "~0.1.1"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0"
   }
 }

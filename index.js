@@ -163,6 +163,7 @@ module.exports = {
             _.each(obj,function(element,index){
                obj[index] = self.evaluateObject(element); 
             });
+            return obj;
         }
         else if(_.isString(obj)){
             return self.evaluate(obj);

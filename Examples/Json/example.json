@@ -1,0 +1,5 @@
+{
+	"key1":"value1",
+	"key2":"{{=objectOne.add(2,3)}}",
+	"key3":"{{=objectTwo.isItTrue}}"
+}

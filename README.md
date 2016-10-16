@@ -13,7 +13,7 @@ Install it via the npm command:<br/>
 No bower yet, or ever. 
 ##Usage
 First you load the library:<br/>
-`var t = require("blacktea.JsonTemplates");`<br/>
+`var t = require("blacktea.jsonTemplates");`<br/>
 Now you can start adding objects, that should be available in your json files.<br/>For example:<br/>
 ```
 var testObject = {
@@ -30,7 +30,7 @@ Lets assume, you have a file, called ***example.json*** with the following conte
 ```
 {
 "example":"value1",
-"example2":"{{=test.add(1,2)}}"
+"example2":"{{test.add(1,2)}}"
 }
 ```
 <br/>
@@ -50,9 +50,9 @@ The result will be:<br/>
 ```
 <br/>
 The library uses the lodash templating engine with changed delimiters:<br/>
-   {{= }} - interpolation<br/>
+   {{ }} - interpolation<br/>
    {{- }} - escaping<br/>
-   {{ }} - evaluation<br/>
+   {{! }} - evaluation<br/>
 <br/><br/>
 <br/>For now it is not possible to change the delimiters, there may be support for custom delimiters in feature versions.
 <br/><br/>
@@ -65,7 +65,7 @@ a json file containing this values:<br/>
 ```
 {
 "example":"value1",
-"example2":"{{=test.add(1,2)}}"
+"example2":"{{test.add(1,2)}}"
 }
 ```
 <br/>
@@ -83,7 +83,7 @@ a json file containing this values:<br/>
 ```
 {
 "example":"value1",
-"example2":"this is the value: {{=test.add(1,2)}}"
+"example2":"this is the value: {{test.add(1,2)}}"
 }
 ```
 <br/>

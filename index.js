@@ -1,5 +1,5 @@
 var _ = require("lodash");
-var Exceptions = require("blacktea.Exceptions");
+var Exceptions = require("blacktea.exceptions");
 var glob = require("glob");
 var path = require("path");
 

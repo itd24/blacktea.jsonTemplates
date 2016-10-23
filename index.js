@@ -39,9 +39,11 @@ var privateFunctions = {
     /**
      * evaluates the template and returns a replacement
      * @param  {string} template the template to evaluate
+     * @param  {mixed} tmpValues injected values valid only for this evaluation
      * @return {mixed}          the result of the evaluation
      */
-    evaluate:function(template){
+    evaluate:function(template,tmpValues){
+        tmpValues = tmpValues  {};
         //gets the first interpolate match and evaluates it
         var matches = this.prepareTemplate(template).match(options.interpolate);
         if(matches.length == 0)
@@ -49,7 +51,10 @@ var privateFunctions = {
             throw new Exceptions.RuntimeException("The template can not be transformed into a single value");
         }
         var match = _.trim(matches[0]);
-        var body = "(function(){return templateObject."+match.replace(options.interpolate,"$1")+"}())";
+
+        var objectToInject = _.merge({},templateObject,tmpValues);
+
+        var body = "(function(){return objectToInject."+match.replace(options.interpolate,"$1")+"}())";
         try{
             var evalResult = eval(body);
             return evalResult;
@@ -61,12 +66,15 @@ var privateFunctions = {
     /**
      * parses a template using the lodash templating engine
      * @param  {string} template the template to parse
+     * @param  {mixed} tmpValues injected values valid only for this evaluation
      * @return {string}          the result of the compiled template function
      */
-    parse:function(template){
+    parse:function(template,tmpValues){
         try{
+            tmpValues = tmpValues  {};
+            var objectToInject = _.merge({},templateObject,tmpValues);
             var compiled = _.template(template,options);
-            return compiled(templateObject);
+            return compiled(objectToInject);
         }
         catch(e){
             throw e;
@@ -142,31 +150,33 @@ module.exports = {
     /**
      * evaluates a template. Based on if it is a replacement, it either evaluates or parses the string
      * @param  {string} template the template to evaluate
+     * @param  {mixed} tmpValues injected values valid only for this evaluation
      * @return {mixed}          the result of the evaluation
      */
-    evaluate:function(template){
+    evaluate:function(template,tmpValues){
         if(privateFunctions.isTemplateReplacement(template)){
-           return privateFunctions.evaluate(template); 
+           return privateFunctions.evaluate(template,tmpValues); 
         }
         else{
-            return privateFunctions.parse(template);
+            return privateFunctions.parse(template,tmpValues);
         }
     },
     /**
      * It recursively goes through all object members and evaluates them if needed
      * @param  {object} obj the object to evaluate
+     * @param  {mixed} tmpValues injected values valid only for this evaluation
      * @return {object}     the evaluated object
      */
-    evaluateObject:function(obj){
+    evaluateObject:function(obj,tmpValues){
         var self = this;
         if(_.isArray(obj) || _.isPlainObject(obj)){
             _.each(obj,function(element,index){
-               obj[index] = self.evaluateObject(element); 
+               obj[index] = self.evaluateObject(element,tmpValues); 
             });
             return obj;
         }
         else if(_.isString(obj)){
-            return self.evaluate(obj);
+            return self.evaluate(obj,tmpValues);
         }
         else{
             return obj;
